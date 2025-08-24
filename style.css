@@ -1,0 +1,31 @@
+body {
+    background-color: #f8f9fa;
+}
+
+.card {
+    border: none;
+    border-radius: 8px; /* Reducido para un look más compacto */
+    box-shadow: none; /* Eliminada la sombra */
+    margin-bottom: 1rem; /* Espacio solo abajo */
+}
+
+.card-body {
+    padding: 1rem; /* Reducido el padding */
+}
+
+.card-title {
+    font-weight: bold;
+}
+
+/* Mejorar legibilidad del texto explicativo */
+.text-muted {
+    font-size: 0.9rem; /* Ligeramente más grande */
+    color: #495057 !important; /* Más oscuro */
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    padding: 0;
+}
