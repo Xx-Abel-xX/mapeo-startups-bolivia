@@ -1,11 +1,17 @@
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', () => {
+
     const data = {
         "ecosistema_bolivia_2024": {
             "metricas_generales": {
                 "total_startups": 167,
-                "evolucion_startups": { "2019": 152, "2020": 160, "2021": 155, "2022": 185, "2023": 147, "2024": 167 },
-                "empleos_directos_estimados": 1500,
-                "tasa_supervivencia": "+14%"
+                "evolucion_startups": {
+                    "2019": 152,
+                    "2020": 160,
+                    "2021": 155,
+                    "2022": 185,
+                    "2023": 147,
+                    "2024": 167
+                }
             },
             "distribucion_geografica": {
                 "santa_cruz": { "startups": 69, "porcentaje": 41 },
@@ -14,161 +20,210 @@ document.addEventListener('DOMContentLoaded', function () {
                 "otros_departamentos": { "startups": 12, "porcentaje": 7 }
             },
             "distribucion_por_vertical": [
-                { "nombre": "Fintech", "porcentaje_2024": 32, "porcentaje_2023": 30, "tendencia": "Alta" },
-                { "nombre": "SaaS (Software as a Service)", "porcentaje_2024": 22, "porcentaje_2023": 11, "tendencia": "Crecimiento Explosivo" },
-                { "nombre": "EdTech", "porcentaje_2024": 16, "porcentaje_2023": 14, "tendencia": "Estable" },
-                { "nombre": "eCommerce & Marketplace", "porcentaje_2024": 8, "porcentaje_2023": 14, "tendencia": "En declive" },
-                { "nombre": "Healthtech", "porcentaje_2024": 6, "porcentaje_2023": 6, "tendencia": "Estable" },
-                { "nombre": "Mobility-tech & Logistics", "porcentaje_2024": 4, "porcentaje_2023": 6, "tendencia": "Estable" },
-                { "nombre": "Agrotech", "porcentaje_2024": 2, "porcentaje_2023": 3, "tendencia": "Estable" },
-                { "nombre": "Otras", "porcentaje_2024": 10, "porcentaje_2023": 16, "tendencia": "Estable" }
+                { "nombre": "Fintech", "porcentaje_2024": 32, "porcentaje_2023": 30 },
+                { "nombre": "SaaS", "porcentaje_2024": 22, "porcentaje_2023": 11 },
+                { "nombre": "EdTech", "porcentaje_2024": 16, "porcentaje_2023": 14 },
+                { "nombre": "eCommerce & Marketplace", "porcentaje_2024": 8, "porcentaje_2023": 14 },
+                { "nombre": "Healthtech", "porcentaje_2024": 6, "porcentaje_2023": 6 },
+                { "nombre": "Mobility-tech & Logistics", "porcentaje_2024": 4, "porcentaje_2023": 6 },
+                { "nombre": "Agrotech", "porcentaje_2024": 2, "porcentaje_2023": 3 },
+                { "nombre": "Otras", "porcentaje_2024": 10, "porcentaje_2023": 16 }
             ],
             "modelo_de_negocio": { "B2B": 55, "B2C": 41, "B2G": 4 },
-            "actores_del_ecosistema": { "inversores_formales": 9, "aceleradoras": 4, "incubadoras": 7, "instituciones_de_apoyo": 35, "comunidades_tecnologicas": 27, "universidades": 25 },
+            "financiamiento": {
+                "fuentes": {
+                    "Recursos Propios": 65,
+                    "Familiares/Amigos": 31,
+                    "Inversionistas Ángeles": 18,
+                    "Venture Capital": 12,
+                    "Gobierno/Cooperación": 14
+                }
+            },
+            "talento_y_equipos": {
+                "tamanio_equipos": {
+                    "1-5 personas": 51,
+                    "6-10 personas": 29,
+                    "11-20 personas": 10,
+                    "21-50 personas": 6,
+                    "+50 personas": 4
+                }
+            },
             "benchmark_oportunidades": [
-                { "vertical": "Fintech & SaaS", "potencia": "Muy Alta" },
-                { "vertical": "Mobility-tech, Logistics & Agrotech", "potencia": "Alta" },
-                { "vertical": "EdTech & HealthTech", "potencia": "Media" }
+                { "vertical": "Fintech & SaaS", "potencia": "Muy Alta", "valor": 100 },
+                { "vertical": "Mobility, Logistics & Agrotech", "potencia": "Alta", "valor": 75 },
+                { "vertical": "EdTech & HealthTech", "potencia": "Media", "valor": 50 }
             ]
         }
     };
 
-    const ecosystemData = data.ecosistema_bolivia_2024;
+    const chartData = data.ecosistema_bolivia_2024;
+    const primaryColor = '#007bff';
+    const secondaryColor = '#6c757d';
+    const colorPalette = ['#007bff', '#28a745', '#ffc107', '#dc3545', '#17a2b8', '#6c757d', '#fd7e14', '#6610f2'];
 
-    // Métricas Generales
-    document.getElementById('total-startups').textContent = ecosystemData.metricas_generales.total_startups;
-    document.getElementById('empleos-directos').textContent = ecosystemData.metricas_generales.empleos_directos_estimados;
-    document.getElementById('tasa-supervivencia').textContent = ecosystemData.metricas_generales.tasa_supervivencia;
-
-    // Evolución de Startups
-    const evolucionData = ecosystemData.metricas_generales.evolucion_startups;
-    const evolucionOptions = {
-        chart: { type: 'line', height: 350 },
-        series: [{ name: 'Startups', data: Object.values(evolucionData) }],
-        xaxis: { categories: Object.keys(evolucionData) },
-        tooltip: {
-            y: {
-                formatter: function (val) {
-                    return val + " startups"
+    const chartOptions = {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                position: 'top',
+            },
+            tooltip: {
+                callbacks: {
+                    label: function(context) {
+                        let label = context.dataset.label || '';
+                        if (label) {
+                            label += ': ';
+                        }
+                        if (context.parsed.y !== null) {
+                            label += context.parsed.y + '%';
+                        }
+                        return label;
+                    }
                 }
             }
         }
     };
-    new ApexCharts(document.querySelector("#evolucion-chart"), evolucionOptions).render();
 
-    // Distribución Geográfica
-    const geoData = ecosystemData.distribucion_geografica;
-    const geoOptions = {
-        chart: { type: 'bar', height: 350 },
-        series: [{ name: 'Startups', data: Object.values(geoData).map(d => d.startups) }],
-        xaxis: { categories: Object.keys(geoData).map(k => k.replace('_', ' ').toUpperCase()) },
-        tooltip: {
-            y: {
-                formatter: function (val, { series, seriesIndex, dataPointIndex, w }) {
-                    const percentage = Object.values(geoData)[dataPointIndex].porcentaje;
-                    return val + " startups (" + percentage + "%)"
+    // 1. Evolución de Startups
+    new Chart(document.getElementById('evolucionChart'), {
+        type: 'line',
+        data: {
+            labels: Object.keys(chartData.metricas_generales.evolucion_startups),
+            datasets: [{
+                label: 'N° de Startups',
+                data: Object.values(chartData.metricas_generales.evolucion_startups),
+                borderColor: primaryColor,
+                backgroundColor: 'rgba(0, 123, 255, 0.1)',
+                fill: true,
+                tension: 0.3
+            }]
+        },
+        options: { ...chartOptions, plugins: { legend: { display: false } } }
+    });
+
+    // 2. Distribución Geográfica
+    new Chart(document.getElementById('distribucionGeograficaChart'), {
+        type: 'doughnut',
+        data: {
+            labels: Object.keys(chartData.distribucion_geografica).map(k => k.replace('_', ' ').replace(/(?:^|\s)\S/g, a => a.toUpperCase())),
+            datasets: [{
+                label: 'Porcentaje',
+                data: Object.values(chartData.distribucion_geografica).map(v => v.porcentaje),
+                backgroundColor: colorPalette,
+            }]
+        },
+        options: { ...chartOptions, plugins: { legend: { position: 'right'} } }
+    });
+
+    // 3. Modelo de Negocio
+    new Chart(document.getElementById('modeloNegocioChart'), {
+        type: 'pie',
+        data: {
+            labels: Object.keys(chartData.modelo_de_negocio),
+            datasets: [{
+                label: 'Porcentaje',
+                data: Object.values(chartData.modelo_de_negocio),
+                backgroundColor: [colorPalette[0], colorPalette[1], colorPalette[2]],
+            }]
+        },
+        options: { ...chartOptions, plugins: { legend: { position: 'right'} } }
+    });
+
+    // 4. Distribución por Vertical
+    new Chart(document.getElementById('distribucionVerticalChart'), {
+        type: 'bar',
+        data: {
+            labels: chartData.distribucion_por_vertical.map(v => v.nombre),
+            datasets: [
+                {
+                    label: '2023',
+                    data: chartData.distribucion_por_vertical.map(v => v.porcentaje_2023),
+                    backgroundColor: secondaryColor,
+                },
+                {
+                    label: '2024',
+                    data: chartData.distribucion_por_vertical.map(v => v.porcentaje_2024),
+                    backgroundColor: primaryColor,
                 }
-            }
-        }
-    };
-    new ApexCharts(document.querySelector("#distribucion-geografica-chart"), geoOptions).render();
+            ]
+        },
+        options: { ...chartOptions, scales: { y: { beginAtZero: true, ticks: { callback: value => value + '%' } } } }
+    });
 
-    // Modelo de Negocio
-    const modeloData = ecosystemData.modelo_de_negocio;
-    const modeloOptions = {
-        chart: { type: 'donut', height: 350 },
-        series: Object.values(modeloData),
-        labels: Object.keys(modeloData),
-        tooltip: {
-            y: {
-                formatter: function(val) {
-                    return val + " %"
-                }
-            }
-        }
-    };
-    new ApexCharts(document.querySelector("#modelo-negocio-chart"), modeloOptions).render();
+    // 5. Fuentes de Financiamiento
+    new Chart(document.getElementById('financiamientoChart'), {
+        type: 'bar',
+        data: {
+            labels: Object.keys(chartData.financiamiento.fuentes),
+            datasets: [{
+                label: '% de Startups',
+                data: Object.values(chartData.financiamiento.fuentes),
+                backgroundColor: colorPalette,
+            }]
+        },
+        options: { ...chartOptions, indexAxis: 'y', plugins: { legend: { display: false } }, scales: { x: { ticks: { callback: value => value + '%' } } } }
+    });
 
-    // Distribución por Vertical
-    const verticalData = ecosystemData.distribucion_por_vertical;
-    const verticalOptions = {
-        chart: { type: 'treemap', height: 400 },
-        series: [{
-            data: verticalData.map(v => ({ x: v.nombre, y: v.porcentaje_2024 }))
-        }],
-        tooltip: {
-            custom: function({ series, seriesIndex, dataPointIndex, w }) {
-                const vertical = verticalData[dataPointIndex];
-                return '<div class="arrow_box">' +
-                    '<span><b>' + vertical.nombre + '</b></span>' + 
-                    '<p>2024: ' + vertical.porcentaje_2024 + '%</p>' +
-                    '<p>2023: ' + vertical.porcentaje_2023 + '%</p>' +
-                    '<p>Tendencia: ' + vertical.tendencia + '</p>' +
-                    '</div>'
-            }
-        }
-    };
-    new ApexCharts(document.querySelector("#distribucion-vertical-chart"), verticalOptions).render();
-    
-    // Actores del ecosistema
-    const actoresData = ecosystemData.actores_del_ecosistema;
-    const actoresOptions = {
-        chart: { type: 'bar', height: 350 },
-        series: [{ name: 'Cantidad', data: Object.values(actoresData) }],
-        xaxis: { categories: Object.keys(actoresData).map(k => k.replace('_', ' ').toUpperCase()) },
-        plotOptions: {
-            bar: {
-                horizontal: true
-            }
-        }
-    };
-    new ApexCharts(document.querySelector("#actores-ecosistema-chart"), actoresOptions).render();
+    // 6. Tamaño de Equipos
+    new Chart(document.getElementById('talentoChart'), {
+        type: 'bar',
+        data: {
+            labels: Object.keys(chartData.talento_y_equipos.tamanio_equipos),
+            datasets: [{
+                label: '% de Startups',
+                data: Object.values(chartData.talento_y_equipos.tamanio_equipos),
+                backgroundColor: primaryColor
+            }]
+        },
+        options: { ...chartOptions, plugins: { legend: { display: false } }, scales: { y: { ticks: { callback: value => value + '%' } } } }
+    });
 
-    // --- GRÁFICOS DE CONCLUSIONES ---
+    // --- Conclusion Charts ---
 
-    // 1. Crecimiento de SaaS
-    const saasData = ecosystemData.distribucion_por_vertical.find(v => v.nombre.includes('SaaS'));
-    const saasGrowthOptions = {
-        chart: { type: 'bar', height: 250, sparkline: { enabled: true } },
-        series: [{ name: 'Participación', data: [saasData.porcentaje_2023, saasData.porcentaje_2024] }],
-        xaxis: { categories: ['2023', '2024'] },
-        yaxis: { labels: { formatter: (val) => val + '%' } },
-        colors: ['#008FFB', '#00E396'],
-        plotOptions: { bar: { columnWidth: '45%' } },
-        tooltip: { y: { formatter: (val) => val + '%' } }
-    };
-    new ApexCharts(document.querySelector("#saas-growth-chart"), saasGrowthOptions).render();
+    // 7. Crecimiento SaaS
+    const saasData = chartData.distribucion_por_vertical.find(v => v.nombre === 'SaaS');
+    new Chart(document.getElementById('saasGrowthChart'), {
+        type: 'bar',
+        data: {
+            labels: ['2023', '2024'],
+            datasets: [{
+                label: 'Participación de Mercado (%)',
+                data: [saasData.porcentaje_2023, saasData.porcentaje_2024],
+                backgroundColor: [secondaryColor, primaryColor]
+            }]
+        },
+        options: { ...chartOptions, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, ticks: { callback: value => value + '%' } } } }
+    });
 
-    // 2. Potencial de Inversión
-    const potencialData = ecosystemData.benchmark_oportunidades;
-    const potencialOptions = {
-        chart: { type: 'bar', height: 250 },
-        series: [{ name: 'Nivel de Potencial', data: potencialData.map(item => {
-            if (item.potencia === 'Muy Alta') return 3;
-            if (item.potencia === 'Alta') return 2;
-            return 1;
-        }).reverse() }],
-        xaxis: { categories: potencialData.map(item => item.vertical).reverse() },
-        plotOptions: { bar: { horizontal: true, distributed: true } },
-        legend: { show: false },
-        colors: ['#fca311', '#14213d', '#e5e5e5'],
-        tooltip: {
-            y: {
-                formatter: function (val, { series, seriesIndex, dataPointIndex, w }) {
-                    return 'Potencial: ' + potencialData.reverse()[dataPointIndex].potencia;
-                }
-            }
-        }
-    };
-    new ApexCharts(document.querySelector("#potencial-chart"), potencialOptions).render();
+    // 8. Oportunidades
+    new Chart(document.getElementById('oportunidadesChart'), {
+        type: 'polarArea',
+        data: {
+            labels: chartData.benchmark_oportunidades.map(b => b.vertical),
+            datasets: [{
+                label: 'Potencial',
+                data: chartData.benchmark_oportunidades.map(b => b.valor),
+                backgroundColor: ['rgba(40, 167, 69, 0.7)', 'rgba(255, 193, 7, 0.7)', 'rgba(220, 53, 69, 0.7)']
+            }]
+        },
+        options: { ...chartOptions, plugins: { legend: { position: 'bottom'} } }
+    });
 
-    // 3. Concentración Geográfica
-    const concentracionOptions = {
-        chart: { type: 'donut', height: 250 },
-        series: [93, 7],
-        labels: ['Eje Troncal (SCZ, LP, CBB)', 'Otros Departamentos'],
-        colors: ['#14213d', '#e5e5e5'],
-        legend: { position: 'bottom' }
+    // 9. Eje Central
+    const ejeCentralData = {
+        'Eje Central (SC, LP, CB)': 93,
+        'Resto del País': 7
     };
-    new ApexCharts(document.querySelector("#concentracion-chart"), concentracionOptions).render();
+    new Chart(document.getElementById('ejeCentralChart'), {
+        type: 'doughnut',
+        data: {
+            labels: Object.keys(ejeCentralData),
+            datasets: [{
+                data: Object.values(ejeCentralData),
+                backgroundColor: [primaryColor, secondaryColor]
+            }]
+        },
+        options: { ...chartOptions, plugins: { legend: { position: 'bottom'} } }
+    });
 });

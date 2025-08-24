@@ -3,131 +3,85 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard de Startups en Bolivia 2024</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>Mapeo del Ecosistema de Startups en Bolivia 2024</title>
     <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-chart-treemap@2.3.0/dist/chartjs-chart-treemap.min.js"></script>
 </head>
 <body>
-    <div class="container-fluid">
-        <h1 class="text-center my-4">Ecosistema de Startups en Bolivia 2024</h1>
+    <header>
+        <h1>Radiografía del Ecosistema de Startups en Bolivia</h1>
+        <p class="subtitle">Análisis basado en el "Mapeo del Ecosistema de Tecnología Digital en Bolivia 2024"</p>
+    </header>
 
-        <div class="row g-3">
-            <div class="col-md-4">
-                <div class="card text-center">
-                    <div class="card-body">
-                        <h5 class="card-title">Total de Startups</h5>
-                        <p class="card-text display-4" id="total-startups"></p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card text-center">
-                    <div class="card-body">
-                        <h5 class="card-title">Empleos Directos Estimados</h5>
-                        <p class="card-text display-4" id="empleos-directos"></p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card text-center">
-                    <div class="card-body">
-                        <h5 class="card-title">Tasa de Supervivencia</h5>
-                        <p class="card-text display-4" id="tasa-supervivencia"></p>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <main>
+        <section class="context-section">
+            <h2>Marco Teórico</h2>
+            <p>Este dashboard presenta un análisis visual del ecosistema de startups en Bolivia, con datos actualizados a 2024. Una <strong>startup</strong> se define como una empresa de base tecnológica con alto potencial de escalamiento. La información proviene del estudio colaborativo de Funda-Pró, Emprender Futuro, SOLYDES y BIM, que mapea a los actores clave, tendencias y oportunidades en el sector tecnológico del país.</p>
+        </section>
 
-        <div class="row mt-3 g-3">
-            <div class="col-md-7">
-                <div class="card h-100">
-                    <div class="card-body">
-                        <h5 class="card-title">Evolución del Número de Startups (2019-2024)</h5>
-                        <small class="text-muted">Este gráfico muestra el número total de startups activas cada año, reflejando una recuperación en 2024 después de una caída en 2023.</small>
-                        <div id="evolucion-chart"></div>
-                    </div>
-                </div>
+        <section class="grid-container">
+            <div class="chart-card">
+                <h3>Evolución del N° de Startups (2019-2024)</h3>
+                <canvas id="evolucionChart"></canvas>
             </div>
-            <div class="col-md-5">
-                <div class="card h-100">
-                    <div class="card-body">
-                        <h5 class="card-title">Modelo de Negocio</h5>
-                        <small class="text-muted">Clasificación de startups según su cliente principal. <strong>B2B (Business-to-Business):</strong> empresas que venden a otras empresas. <strong>B2C (Business-to-Consumer):</strong> empresas que venden al consumidor final. <strong>B2G (Business-to-Government):</strong> empresas que venden al gobierno.</small>
-                        <div id="modelo-negocio-chart"></div>
-                    </div>
-                </div>
+            <div class="chart-card">
+                <h3>Distribución Geográfica</h3>
+                <canvas id="distribucionGeograficaChart"></canvas>
             </div>
-        </div>
+            <div class="chart-card">
+                <h3>Modelos de Negocio (B2B vs B2C)</h3>
+                <canvas id="modeloNegocioChart"></canvas>
+                <p class="chart-explanation">
+                    <strong>B2B (Business-to-Business):</strong> Empresas que venden productos/servicios a otras empresas.
+                    <br>
+                    <strong>B2C (Business-to-Consumer):</strong> Empresas que venden directamente al consumidor final.
+                </p>
+            </div>
+            <div class="chart-card full-width">
+                <h3>Distribución por Vertical de Negocio (2024 vs 2023)</h3>
+                <canvas id="distribucionVerticalChart"></canvas>
+                 <p class="chart-explanation">
+                    <strong>SaaS (Software as a Service):</strong> Empresas que ofrecen software a través de una suscripción. Su crecimiento del 11% al 22% es el más significativo.
+                </p>
+            </div>
+             <div class="chart-card">
+                <h3>Fuentes de Financiamiento</h3>
+                <canvas id="financiamientoChart"></canvas>
+                 <p class="chart-explanation">Muestra el porcentaje de startups que utilizan cada tipo de fuente. Una misma startup puede tener múltiples fuentes.</p>
+            </div>
+            <div class="chart-card">
+                <h3>Tamaño de los Equipos</h3>
+                <canvas id="talentoChart"></canvas>
+            </div>
+        </section>
 
-        <div class="row mt-3 g-3">
-            <div class="col-md-6">
-                <div class="card h-100">
-                    <div class="card-body">
-                        <h5 class="card-title">Distribución Geográfica</h5>
-                        <small class="text-muted">Concentración de startups en los principales departamentos de Bolivia. El eje Santa Cruz - La Paz - Cochabamba representa el 93% del ecosistema.</small>
-                        <div id="distribucion-geografica-chart"></div>
-                    </div>
+        <section class="conclusion-section">
+            <h2>Conclusiones y Oportunidades Clave</h2>
+            <div class="grid-container">
+                <div class="chart-card">
+                    <h3>Crecimiento Explosivo: SaaS</h3>
+                    <canvas id="saasGrowthChart"></canvas>
+                    <p class="chart-explanation">El sector SaaS duplicó su participación, convirtiéndose en la infraestructura tecnológica para otras verticales como Fintech.</p>
+                </div>
+                <div class="chart-card">
+                    <h3>Potencial de Inversión por Vertical</h3>
+                     <canvas id="oportunidadesChart"></canvas>
+                    <p class="chart-explanation"><strong>Fintech y SaaS</strong> muestran el mayor potencial de escalamiento. <strong>Agrotech y Logística</strong> representan una alta oportunidad por la baja oferta actual frente a la demanda de la economía local.</p>
+                </div>
+                <div class="chart-card">
+                    <h3>Eje Central: SC-LP-CBA</h3>
+                    <canvas id="ejeCentralChart"></canvas>
+                    <p class="chart-explanation">El 93% de las startups se concentran en el eje troncal del país, destacando la necesidad de impulsar ecosistemas en otros departamentos.</p>
                 </div>
             </div>
-            <div class="col-md-6">
-                <div class="card h-100">
-                    <div class="card-body">
-                        <h5 class="card-title">Actores del Ecosistema</h5>
-                        <small class="text-muted">Organizaciones que apoyan el crecimiento de las startups, incluyendo inversores, aceleradoras, incubadoras, comunidades y universidades.</small>
-                        <div id="actores-ecosistema-chart"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
+        </section>
+    </main>
 
-        <div class="row mt-3 g-3">
-            <div class="col-md-12">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">Distribución por Vertical (2024)</h5>
-                        <small class="text-muted">Una 'vertical' se refiere a un sector o nicho de mercado específico. Este gráfico muestra qué sectores tienen más startups, destacando el dominio de Fintech y el crecimiento de SaaS.</small>
-                        <div id="distribucion-vertical-chart"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <footer>
+        <p>Fuente: Mapeo del Ecosistema de Tecnología Digital en Bolivia 2024 (Funda-Pró, Emprender Futuro, SOLYDES, BIM).</p>
+    </footer>
 
-        <hr class="my-4">
-
-        <h2 class="text-center mb-4">Conclusiones y Oportunidades</h2>
-        <div class="row g-3">
-            <div class="col-md-4">
-                <div class="card h-100">
-                    <div class="card-body">
-                        <h5 class="card-title">Crecimiento Explosivo de SaaS</h5>
-                        <small class="text-muted">El sector SaaS duplicó su participación del 11% en 2023 al 22% en 2024, mostrando el mayor crecimiento.</small>
-                        <div id="saas-growth-chart"></div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card h-100">
-                    <div class="card-body">
-                        <h5 class="card-title">Potencial de Inversión por Vertical</h5>
-                        <small class="text-muted">Fintech y SaaS se identifican como las verticales con el más alto potencial de escalamiento e inversión.</small>
-                        <div id="potencial-chart"></div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card h-100">
-                    <div class="card-body">
-                        <h5 class="card-title">Concentración Geográfica</h5>
-                        <small class="text-muted">El 93% de las startups se encuentran en el eje troncal del país, destacando una oportunidad de expansión a otros departamentos.</small>
-                        <div id="concentracion-chart"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-    </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <script src="script.js"></script>
 </body>
 </html>
